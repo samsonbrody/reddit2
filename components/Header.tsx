@@ -20,7 +20,7 @@ import {
 function Header() {
   const { data: session } = useSession();
   return (
-    <div className="sticky top-0 flex bg-white px-4 py-2 shadow-sm z-50">
+    <div className="sticky top-0 flex bg-white px-4 items-center py-2 shadow-sm z-50">
       <div className="relative h-10 w-20 flex-shrink-0 cursor-pointer">
         <Image
           objectFit="contain"
