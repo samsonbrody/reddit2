@@ -6,7 +6,15 @@ export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // const session = await getSession();
+  const session = await getSession({ req });
+  const redditUser = session?.user?.name;
+  if (session) {
+    // Signed in
+    console.log(session.user);
+  } else {
+    console.error("not signed in");
+    res.status(401);
+  }
 
   if (req.method === "POST") {
     console.log("post request body: ", req.body);
@@ -33,35 +41,17 @@ export default async function handle(
           title: postTitle,
           body: postBody,
           image: postImage,
-          username: "samsonbrody",
+          username: redditUser,
           subreddit_id: newPostSubredditId,
         },
       });
-      console.log(
-        `successful insert into the ${newPostSubredditName} subreddit`
-      );
+      // console.log(
+      //   `successful insert into the ${newPostSubredditName} subreddit`
+      // );
       res.json(result);
     } catch (e) {
       console.error(e);
     }
-
-    // if (subreddit === "nature") {
-    //   const result = await prisma.post.create({
-    //     data: {
-    //       title: postTitle,
-    //       body: postBody,
-    //       image: postImage,
-    //       username: "samsonbrody",
-    //       subreddit_id: 1,
-    //     },
-    //   });
-    //   res.json({ message: "successfully added post to nature sub" });
-    // } else {
-    //   res.json({
-    //     message:
-    //       'sorry right now everything has to be in the "nature subreddit',
-    //   });
-    // }
   } else {
     res.json({ msg: "only post requests allowed on this route" });
   }

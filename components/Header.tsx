@@ -21,18 +21,18 @@ function Header() {
   const { data: session } = useSession();
   return (
     <div className="sticky top-0 flex bg-white px-4 items-center py-2 shadow-sm z-50">
-      <div className="relative h-10 w-20 flex-shrink-0 cursor-pointer">
+      <div className="relative h-10 w-20 mr-4 flex-shrink-0 cursor-pointer">
         <Image
           objectFit="contain"
           src="https://links.papareact.com/fqy"
           layout="fill"
         />
       </div>
-      <div className="flex items-center mx-7 xl:min-w-[300px]">
+      {/* <div className="sm:flex items-center mx-7 hidden xl:min-w-[300px]">
         <HomeIcon className="h-5 w-5" />
         <p className="flex-1 ml-2 hidden lg:inline">Home</p>
         <ChevronDownIcon className="h-5 w-5" />
-      </div>
+      </div> */}
       {/* SEARCH */}
       <form className="flex flex-1 items-center space-x-2 rounded-sm border border-gray-200 bg-gray-100 px-3 py-1">
         <SearchIcon className="h-6 w-6 text-gray-400" />
