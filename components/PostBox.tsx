@@ -3,10 +3,8 @@ import { useSession } from "next-auth/react";
 import Avatar from "./Avatar";
 import { PhotographIcon, LinkIcon } from "@heroicons/react/solid";
 import { useForm, useFormState } from "react-hook-form";
-import { useMutation } from "@apollo/client";
-import client from "../apollo-client";
-import { GET_SUBREDDIT_BY_TOPIC } from "../graphql/queries";
-import { ADD_SUBREDDIT, ADD_POST } from "../graphql/mutations";
+import axios from "axios";
+
 import toast from "react-hot-toast";
 type FormData = {
   postTitle: string;
@@ -16,8 +14,6 @@ type FormData = {
 };
 
 function PostBox() {
-  const [addPost] = useMutation(ADD_POST);
-  const [addSubreddit] = useMutation(ADD_SUBREDDIT);
   const [imageBoxOpen, setImageBoxOpen] = useState<boolean>(false);
   const { data: session } = useSession();
   const {
@@ -28,86 +24,27 @@ function PostBox() {
     formState: { errors },
   } = useForm<FormData>();
 
-  const onSubmit = handleSubmit(async (formData) => {
-    console.log(formData);
-    const notification = toast.loading("creating a new post");
-
+  async function submitForm(values: FormData) {
+    let config = {
+      method: "POST",
+      url: "http://localhost:3000/api/newpost",
+      heeaders: {
+        "Content-Type": "application/json",
+      },
+      data: values,
+    };
     try {
-      // query for subreddit topic
-
-      const {
-        data: { getSubredditListByTopic },
-      } = await client.query({
-        query: GET_SUBREDDIT_BY_TOPIC,
-        variables: {
-          topic: formData.subreddit,
-        },
-      });
-      console.log(getSubredditListByTopic);
-
-      const subredditExists = getSubredditListByTopic.length > 0;
-      if (!subredditExists) {
-        // create subreddit
-        console.log("subreddit is new -> creating a newsubreddit!");
-
-        const {
-          data: { insertSubreddit: newSubreddit },
-        } = await addSubreddit({
-          variables: {
-            topic: formData.subreddit,
-          },
-        });
-
-        console.log("creating post", formData);
-        const image = formData.postImage || "";
-        const {
-          data: { insertPost: newPost },
-        } = await addPost({
-          variables: {
-            body: formData.postBody,
-            image: image,
-            subreddit_id: newSubreddit.id,
-            title: formData.postTitle,
-            username: session?.user?.name,
-          },
-        });
-        console.log(newPost);
-      } else {
-        // use existing subreddit
-        console.log("subreddit exists already, using existing subreddit");
-
-        const image = formData.postImage || "";
-
-        const {
-          data: { insertPost: newPost },
-        } = await addPost({
-          variables: {
-            body: formData.postBody,
-            image: image,
-            subreddit_id: getSubredditListByTopic[0].id,
-            title: formData.postTitle,
-            username: session?.user?.name,
-          },
-        });
-      }
-      // after post has been added
-      setValue("postBody", "");
-      setValue("postImage", "");
-      setValue("postTitle", "");
-      setValue("subreddit", "");
-      toast.success("posted!", {
-        id: notification,
-      });
+      const response = await axios(config);
+      console.log(response);
     } catch (error) {
-      toast.error("oops! something went wrong", { id: notification });
       console.log(error);
     }
-  });
+  }
 
   return (
     <form
-      onSubmit={onSubmit}
-      className="sticky top-16 z-50 bg-white border rounded-md border-gray-300 p-2"
+      onSubmit={handleSubmit(submitForm)}
+      className="sticky top-20 z-50 bg-white border rounded-md border-gray-300 p-2"
     >
       <div className="flex items-center space-x-3">
         <Avatar />
@@ -146,7 +83,7 @@ function PostBox() {
               className="m-2 flex bg-blue-50 p-2 outline-none"
               {...register("subreddit", { required: true })}
               type="text"
-              placeholder="ie 'cars'"
+              placeholder="ie cars or whatev"
             />
           </div>
           {imageBoxOpen && (
