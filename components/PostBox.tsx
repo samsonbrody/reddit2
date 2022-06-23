@@ -25,6 +25,7 @@ function PostBox() {
   } = useForm<FormData>();
 
   async function submitForm(values: FormData) {
+    const notification = toast.loading("Creating new post...");
     let config = {
       method: "POST",
       url: "http://localhost:3000/api/newpost",
@@ -36,7 +37,20 @@ function PostBox() {
     try {
       const response = await axios(config);
       console.log(response);
+
+      // after the post has been added
+      setValue("postBody", "");
+      setValue("postTitle", "");
+      setValue("postImage", "");
+      setValue("subreddit", "");
+
+      toast.success("post successfully created!", {
+        id: notification,
+      });
     } catch (error) {
+      toast.error("Something went wrong on the backend", {
+        id: notification,
+      });
       console.log(error);
     }
   }
@@ -71,7 +85,7 @@ function PostBox() {
           <div className="flex items-center px-2">
             <p className="min-w-[90px]">Body:</p>
             <input
-              className="m-2 flex bg-blue-50 p-2 outline-none"
+              className="m-2 flex bg-blue-50 p-2 outline-none w-full"
               {...register("postBody")}
               type="text"
               placeholder="text (optional)"
@@ -80,7 +94,7 @@ function PostBox() {
           <div className="flex items-center px-2">
             <p className="min-w-[90px]">Subreddit:</p>
             <input
-              className="m-2 flex bg-blue-50 p-2 outline-none"
+              className="m-2 flex bg-blue-50 p-2 outline-none w-full"
               {...register("subreddit", { required: true })}
               type="text"
               placeholder="ie cars or whatev"
@@ -90,10 +104,10 @@ function PostBox() {
             <div className="flex items-center px-2">
               <p className="min-w-[90px]">Image URL:</p>
               <input
-                className="m-2 flex bg-blue-50 p-2 outline-none"
+                className="m-2 flex bg-blue-50 w-full p-2 outline-none"
                 {...register("postImage")}
                 type="text"
-                placeholder="Optional..."
+                placeholder="Paste in an image URL (strings are easier to save)"
               />
             </div>
           )}
