@@ -28,10 +28,10 @@ const Home = (props: Props) => {
           {[...newPosts]?.reverse().map((np) => {
             return (
               <div
-                className="w-full my-6 flex-col overflow-hidden border rounded-xl bg-gray-100 flex"
+                className="w-full my-6 flex-col overflow-hidden border rounded-2xl bg-gray-100 flex"
                 key={np.id}
               >
-                <p className="my-2 w-full flex items-center justify-center">
+                <p className="mb-2 mt-6 text-xl font-semibold  w-full flex items-center justify-center">
                   {np.title}
                 </p>
                 <p className="my-2 w-full flex items-center justify-center">
