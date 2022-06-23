@@ -58,7 +58,7 @@ const Home = (props: Props) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const res = await fetch("http://localhost:3000/api/feed");
+  const res = await fetch("https://reddit2-theta.vercel.app/api/feed");
   const feed = await res.json();
   console.log(feed);
   return { props: { feed } };

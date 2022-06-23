@@ -28,7 +28,7 @@ function PostBox() {
     const notification = toast.loading("Creating new post...");
     let config = {
       method: "POST",
-      url: "http://localhost:3000/api/newpost",
+      url: "http://reddit2-theta.vercel.app/api/newpost",
       heeaders: {
         "Content-Type": "application/json",
       },
