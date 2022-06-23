@@ -66,7 +66,7 @@ function Header() {
           </div>
           <div className="flex-1 text-xs">
             <p className="truncate">{`Hi, ${session?.user?.name}`}</p>
-            <p className="text-gray-400 hover:text-gray-200">Sign Out</p>
+            <p className="text-black hover:text-gray-200">Sign Out</p>
           </div>
         </div>
       ) : (
@@ -77,7 +77,7 @@ function Header() {
           <div className="h-5 w-5 relative flex-shrink-0">
             <Image layout="fill" src="https://links.papareact.com/23l" alt="" />
           </div>
-          <p className="text-gray-400">Sign In</p>
+          <p className="text-black">Sign In</p>
         </div>
       )}
     </div>
